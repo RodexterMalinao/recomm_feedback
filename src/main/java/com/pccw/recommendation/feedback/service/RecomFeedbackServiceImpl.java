@@ -30,7 +30,7 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 		for (Map<String, String> data : dataList) {
 			RecomFeedback recomFeedback = new RecomFeedback();
 			recomFeedback.setFeedbackId(DataTypeUtil.stringAsInteger(data.get(F_FEEDBACK_ID)));
-			recomFeedback.setFeedbackDttm((data.get(F_FEEDBACK_DTTM)));
+			recomFeedback.setFeedbackDttm(String.valueOf(data.get(F_FEEDBACK_DTTM)));
 			recomFeedback.setFeedbackSystem(data.get(F_FEEDBACK_SYSTEM));
 			recomFeedback.setRecommendationSourceSystem(data.get(F_RECOMMENDATION_SOURCE_SYSTEM));
 			recomFeedback.setRecommendedOffer(data.get(F_RECOMMENDED_OFFER));
