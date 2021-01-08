@@ -79,10 +79,11 @@
 			<artifactId>camel-jdbc</artifactId>
 			<version>2.17.0</version>
 		</dependency>
+		<!-- Oracle JDBC driver -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>net.javacrumbs.json-unit</groupId>
@@ -107,17 +108,6 @@
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>3.4.0.905</version>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-surefire-plugin</artifactId> -->
-<!-- 				<version>3.0.0-M4</version> -->
-<!-- 				<configuration> -->
-<!-- 					<argLine>${jacocoArgLine}</argLine> -->
-<!-- 					<reportsDirectory>${project.test.result.directory}/surefire</reportsDirectory> -->
-<!-- 				</configuration> -->
-<!-- 			</plugin> -->
-			
-			<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
