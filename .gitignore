@@ -1,3 +1,7 @@
+.mvn/wrapper
+Dockerfile
+mvnw
+mvnw.cmd
 .DS_Store
 .idea
 *.iml
