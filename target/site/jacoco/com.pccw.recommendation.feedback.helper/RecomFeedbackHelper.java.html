@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecomFeedbackHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recommendation_feedback</a> &gt; <a href="index.source.html" class="el_package">com.pccw.recommendation.feedback.helper</a> &gt; <span class="el_source">RecomFeedbackHelper.java</span></div><h1>RecomFeedbackHelper.java</h1><pre class="source lang-java linenums">package com.pccw.recommendation.feedback.helper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.util.StringUtils;
+
+import com.google.common.collect.ImmutableList;
+import com.pccw.recommendation.feedback.model.RecomFeedback;
+
+<span class="fc" id="L11">public class RecomFeedbackHelper extends SQLHelper {</span>
+
+	public static final String T_RECOM_FB = &quot;RECOMMENDATION_FEEDBACK&quot;;
+
+	public static final String F_STAFF_ID = &quot;STAFF_ID&quot;;
+	public static final String F_STAFF_NAME = &quot;STAFF_NAME&quot;;
+	public static final String F_FEEDBACK_ID = &quot;FEEDBACK_ID&quot;;
+	public static final String F_FEEDBACK_DTTM = &quot;FEEDBACK_DTTM&quot;;
+	public static final String F_FEEDBACK_SYSTEM = &quot;FEEDBACK_SYSTEM&quot;;
+	public static final String F_PRODUCT_LINES = &quot;PRODUCT_LINES&quot;;
+	public static final String F_RECOMMENDATION_SOURCE_SYSTEM = &quot;RECOMMENDATION_SOURCE_SYSTEM&quot;;
+	public static final String F_RECOMMENDED_OFFER = &quot;RECOMMENDED_OFFER&quot;;
+	public static final String F_FEEDBACK_TYPE = &quot;FEEDBACK_TYPE&quot;;
+	public static final String F_FEEDBACK_REASON = &quot;FEEDBACK_REASON&quot;;
+	public static final String F_CLUB_ID = &quot;CLUB_ID&quot;;
+	public static final String F_PARENT_CUST_NUM = &quot;PARENT_CUST_NUM&quot;;
+	public static final String F_LINE_LEVEL_KEY = &quot;LINE_LEVEL_KEY&quot;;
+	public static final String F_LINE_LEVEL_VALUE = &quot;LINE_LEVEL_VALUE&quot;;
+	public static final String F_CUSTOMER_NUMBER = &quot;CUSTOMER_NUMBER&quot;;
+	public static final String F_TEAM_ID = &quot;TEAM_ID&quot;;
+	public static final String F_TEAM_NAME = &quot;TEAM_NAME&quot;;
+	public static final String F_CHANNEL_CODE = &quot;CHANNEL_CODE&quot;;
+	public static final String F_CHANNEL_NAME = &quot;CHANNEL_NAME&quot;;
+	public static final String F_ENABLED_FLAG = &quot;ENABLED_FLAG&quot;;
+
+	public static final String ENABLE_FLAG = &quot;Y&quot;;
+	public static final String DISABLE_FLAG = &quot;N&quot;;
+
+	public static final String DATE_FORMAT = &quot;yyyy-MM-dd HH24:MI:SS&quot;;
+
+<span class="fc" id="L41">	public static final ImmutableList&lt;String&gt; mandatoryFields = ImmutableList.of(F_STAFF_ID, F_STAFF_NAME,</span>
+<span class="fc" id="L42">			F_FEEDBACK_SYSTEM, F_PRODUCT_LINES, F_RECOMMENDATION_SOURCE_SYSTEM, F_RECOMMENDED_OFFER, F_FEEDBACK_TYPE,</span>
+<span class="fc" id="L43">			F_TEAM_ID, F_TEAM_NAME, F_CHANNEL_CODE, F_CHANNEL_NAME, F_PARENT_CUST_NUM, F_LINE_LEVEL_KEY,</span>
+<span class="fc" id="L44">			F_LINE_LEVEL_VALUE);</span>
+
+	public boolean isMandatoryValid(RecomFeedback recomFeedback) {
+
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		if (StringUtils.isEmpty(recomFeedback.getStaffId())) {</span>
+<span class="fc" id="L49">			return false;</span>
+		}
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getStaffName())) {</span>
+<span class="nc" id="L52">			return false;</span>
+		}
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getFeedbackSystem())) {</span>
+<span class="nc" id="L55">			return false;</span>
+		}
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getProductLines())) {</span>
+<span class="nc" id="L58">			return false;</span>
+		}
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getRecommendationSourceSystem())) {</span>
+<span class="nc" id="L61">			return false;</span>
+		}
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getRecommendedOffer())) {</span>
+<span class="nc" id="L64">			return false;</span>
+		}
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getFeedbackType())) {</span>
+<span class="nc" id="L67">			return false;</span>
+		}
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getTeamId())) {</span>
+<span class="nc" id="L70">			return false;</span>
+		}
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getTeamName())) {</span>
+<span class="nc" id="L73">			return false;</span>
+		}
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getChannelCode())) {</span>
+<span class="nc" id="L76">			return false;</span>
+		}
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getChannelName())) {</span>
+<span class="nc" id="L79">			return false;</span>
+		}
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getParentCustNum())) {</span>
+<span class="nc" id="L82">			return false;</span>
+		}
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getLineLevelKey())) {</span>
+<span class="nc" id="L85">			return false;</span>
+		}
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getLineLevelValue())) {</span>
+<span class="nc" id="L88">			return false;</span>
+		}
+<span class="fc" id="L90">		return true;</span>
+	}
+
+	public static String returnMessageForMandatoryValidation(RecomFeedback recomFeedback) {
+<span class="fc" id="L94">		List&lt;String&gt; invFields = new ArrayList&lt;&gt;();</span>
+
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getStaffId())) {</span>
+<span class="fc" id="L97">			invFields.add(F_STAFF_ID);</span>
+		}
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getStaffName())) {</span>
+<span class="fc" id="L100">			invFields.add(F_STAFF_NAME);</span>
+		}
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getFeedbackSystem())) {</span>
+<span class="nc" id="L103">			invFields.add(F_FEEDBACK_SYSTEM);</span>
+		}
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getProductLines())) {</span>
+<span class="fc" id="L106">			invFields.add(F_PRODUCT_LINES);</span>
+		}
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getRecommendationSourceSystem())) {</span>
+<span class="fc" id="L109">			invFields.add(F_RECOMMENDATION_SOURCE_SYSTEM);</span>
+		}
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getRecommendedOffer())) {</span>
+<span class="fc" id="L112">			invFields.add(F_RECOMMENDED_OFFER);</span>
+		}
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getFeedbackType())) {</span>
+<span class="fc" id="L115">			invFields.add(F_FEEDBACK_TYPE);</span>
+		}
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getTeamId())) {</span>
+<span class="fc" id="L118">			invFields.add(F_TEAM_ID);</span>
+		}
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getTeamName())) {</span>
+<span class="fc" id="L121">			invFields.add(F_TEAM_NAME);</span>
+		}
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getChannelCode())) {</span>
+<span class="fc" id="L124">			invFields.add(F_CHANNEL_CODE);</span>
+		}
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getChannelName())) {</span>
+<span class="fc" id="L127">			invFields.add(F_CHANNEL_NAME);</span>
+		}
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getParentCustNum())) {</span>
+<span class="fc" id="L130">			invFields.add(F_PARENT_CUST_NUM);</span>
+		}
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getLineLevelKey())) {</span>
+<span class="fc" id="L133">			invFields.add(F_LINE_LEVEL_KEY);</span>
+		}
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">		if (StringUtils.isEmpty(recomFeedback.getLineLevelValue())) {</span>
+<span class="fc" id="L136">			invFields.add(F_LINE_LEVEL_VALUE);</span>
+		}
+<span class="fc" id="L138">		return String.join(&quot;,&quot;, invFields);</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

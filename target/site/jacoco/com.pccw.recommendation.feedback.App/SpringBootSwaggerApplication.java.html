@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SpringBootSwaggerApplication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recommendation_feedback</a> &gt; <a href="index.source.html" class="el_package">com.pccw.recommendation.feedback.App</a> &gt; <span class="el_source">SpringBootSwaggerApplication.java</span></div><h1>SpringBootSwaggerApplication.java</h1><pre class="source lang-java linenums">package com.pccw.recommendation.feedback.App;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+import org.apache.camel.component.swagger.DefaultCamelSwaggerServlet;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+<span class="nc" id="L14">public class SpringBootSwaggerApplication {</span>
+
+	private static final String CAMEL_URL_MAPPING = &quot;/api/v1/recommendation/feedback/*&quot;;
+	private static final String CAMEL_SERVLET_NAME = &quot;CamelServlet&quot;;
+
+	public static void main(String[] args) {
+<span class="nc" id="L20">		SpringApplication.run(SpringBootSwaggerApplication.class, args);</span>
+<span class="nc" id="L21">	}</span>
+
+	@Bean
+	public ServletRegistrationBean servletRegistrationBean() {
+<span class="nc" id="L25">		ServletRegistrationBean registration = new ServletRegistrationBean(new CamelHttpTransportServlet(),</span>
+<span class="nc" id="L26">				CAMEL_URL_MAPPING);</span>
+<span class="nc" id="L27">		registration.setName(CAMEL_SERVLET_NAME);</span>
+<span class="nc" id="L28">		return registration;</span>
+	}
+
+	@Bean
+	public ServletRegistrationBean swaggerServlet() {
+<span class="nc" id="L33">		ServletRegistrationBean swagger = new ServletRegistrationBean(new DefaultCamelSwaggerServlet(), &quot;/api-doc/*&quot;);</span>
+<span class="nc" id="L34">		Map&lt;String, String&gt; params = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L35">		params.put(&quot;base.path&quot;, &quot;api/v1/recommendation/feedback/&quot;);</span>
+<span class="nc" id="L36">		params.put(&quot;api.title&quot;, &quot;Recommendation Feedback&quot;);</span>
+<span class="nc" id="L37">		params.put(&quot;api.description&quot;, &quot;my api description&quot;);</span>
+<span class="nc" id="L38">		params.put(&quot;api.termsOfServiceUrl&quot;, &quot;termsOfServiceUrl&quot;);</span>
+<span class="nc" id="L39">		params.put(&quot;api.license&quot;, &quot;license&quot;);</span>
+<span class="nc" id="L40">		params.put(&quot;api.licenseUrl&quot;, &quot;licenseUrl&quot;);</span>
+<span class="nc" id="L41">		swagger.setInitParameters(params);</span>
+<span class="nc" id="L42">		return swagger;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

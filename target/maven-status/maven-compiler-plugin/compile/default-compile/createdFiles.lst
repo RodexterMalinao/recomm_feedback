@@ -1,1 +1,9 @@
-com\pccw\recommendation\feedback\model\SpringBootSwaggerApplication.class
+com\pccw\recommendation\feedback\service\RecomFeedbackServiceImpl.class
+com\pccw\recommendation\feedback\response\Data.class
+com\pccw\recommendation\feedback\service\RecomFeedbackService.class
+com\pccw\recommendation\feedback\response\RecomFeedbackHistory.class
+com\pccw\recommendation\feedback\response\ResponseMessage.class
+com\pccw\recommendation\feedback\util\DataTypeUtil.class
+com\pccw\recommendation\feedback\util\ErrorResponseUtil.class
+com\pccw\recommendation\feedback\model\RecomFeedback.class
+com\pccw\recommendation\feedback\model\RecomFeedbackPost.class

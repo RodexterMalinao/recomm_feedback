@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecomFeedbackServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">recommendation_feedback</a> &gt; <a href="index.source.html" class="el_package">com.pccw.recommendation.feedback.service</a> &gt; <span class="el_source">RecomFeedbackServiceImpl.java</span></div><h1>RecomFeedbackServiceImpl.java</h1><pre class="source lang-java linenums">package com.pccw.recommendation.feedback.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.camel.Exchange;
+import org.springframework.stereotype.Service;
+
+import com.pccw.recommendation.feedback.helper.RecomFeedbackHelper;
+import com.pccw.recommendation.feedback.model.RecomFeedback;
+import com.pccw.recommendation.feedback.model.RecomFeedbackPost;
+import com.pccw.recommendation.feedback.response.Data;
+import com.pccw.recommendation.feedback.response.RecomFeedbackHistory;
+import com.pccw.recommendation.feedback.response.ResponseMessage;
+import com.pccw.recommendation.feedback.util.DataTypeUtil;
+import com.pccw.recommendation.feedback.util.ErrorResponseUtil;
+
+import net.javacrumbs.jsonunit.core.internal.JsonUtils;
+
+@Service(&quot;recomFeedbackService&quot;)
+<span class="fc" id="L22">public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements RecomFeedbackService {</span>
+
+	@Override
+	public List&lt;RecomFeedback&gt; retrieveRecomFeedback(Exchange xchg) {
+		@SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L27">		ArrayList&lt;Map&lt;String, String&gt;&gt; dataList = (ArrayList&lt;Map&lt;String, String&gt;&gt;) xchg.getIn().getBody();</span>
+<span class="fc" id="L28">		List&lt;RecomFeedback&gt; recomFeedbacks = new ArrayList&lt;RecomFeedback&gt;();</span>
+
+<span class="fc bfc" id="L30" title="All 2 branches covered.">		for (Map&lt;String, String&gt; data : dataList) {</span>
+<span class="fc" id="L31">			RecomFeedback recomFeedback = new RecomFeedback();</span>
+<span class="fc" id="L32">			recomFeedback.setFeedbackId(DataTypeUtil.stringAsInteger(data.get(F_FEEDBACK_ID)));</span>
+<span class="fc" id="L33">			recomFeedback.setFeedbackDttm(String.valueOf(data.get(F_FEEDBACK_DTTM)));</span>
+<span class="fc" id="L34">			recomFeedback.setFeedbackSystem(data.get(F_FEEDBACK_SYSTEM));</span>
+<span class="fc" id="L35">			recomFeedback.setRecommendationSourceSystem(data.get(F_RECOMMENDATION_SOURCE_SYSTEM));</span>
+<span class="fc" id="L36">			recomFeedback.setRecommendedOffer(data.get(F_RECOMMENDED_OFFER));</span>
+<span class="fc" id="L37">			recomFeedback.setFeedbackType(data.get(F_FEEDBACK_TYPE));</span>
+<span class="fc" id="L38">			recomFeedback.setFeedbackReason(data.get(F_FEEDBACK_REASON));</span>
+<span class="fc" id="L39">			recomFeedback.setProductLines(data.get(F_PRODUCT_LINES));</span>
+<span class="fc" id="L40">			recomFeedback.setClubId(data.get(F_CLUB_ID));</span>
+<span class="fc" id="L41">			recomFeedback.setParentCustNum(data.get(F_PARENT_CUST_NUM));</span>
+<span class="fc" id="L42">			recomFeedback.setLineLevelKey(data.get(F_LINE_LEVEL_KEY));</span>
+<span class="fc" id="L43">			recomFeedback.setLineLevelValue(data.get(F_LINE_LEVEL_VALUE));</span>
+<span class="fc" id="L44">			recomFeedback.setCustomerNumber(data.get(F_CUSTOMER_NUMBER));</span>
+<span class="fc" id="L45">			recomFeedback.setStaffId(data.get(F_STAFF_ID));</span>
+<span class="fc" id="L46">			recomFeedback.setStaffName(data.get(F_STAFF_NAME));</span>
+<span class="fc" id="L47">			recomFeedback.setTeamId(data.get(F_TEAM_ID));</span>
+<span class="fc" id="L48">			recomFeedback.setTeamName(data.get(F_TEAM_NAME));</span>
+<span class="fc" id="L49">			recomFeedback.setChannelCode(data.get(F_CHANNEL_CODE));</span>
+<span class="fc" id="L50">			recomFeedback.setChannelName(data.get(F_CHANNEL_NAME));</span>
+<span class="fc" id="L51">			recomFeedback.setEnabledFlag(data.get(F_ENABLED_FLAG));</span>
+<span class="fc" id="L52">			recomFeedbacks.add(recomFeedback);</span>
+		}
+
+<span class="fc" id="L55">		return recomFeedbacks;</span>
+	}
+
+	@Override
+	public void selectRecomFeedback(Exchange xchg) {
+
+<span class="fc" id="L61">		String columns = F_FEEDBACK_ID + &quot;,&quot; + &quot; TO_CHAR(&quot; + F_FEEDBACK_DTTM + &quot;, '&quot; + DATE_FORMAT + &quot;') &quot;</span>
+				+ F_FEEDBACK_DTTM + &quot;,&quot; + F_FEEDBACK_SYSTEM + &quot;,&quot; + F_RECOMMENDATION_SOURCE_SYSTEM + &quot;,&quot;
+				+ F_RECOMMENDED_OFFER + &quot;,&quot; + F_FEEDBACK_TYPE + &quot;,&quot; + F_FEEDBACK_REASON + &quot;,&quot; + F_PRODUCT_LINES + &quot;,&quot;
+				+ F_CLUB_ID + &quot;,&quot; + F_PARENT_CUST_NUM + &quot;,&quot; + F_LINE_LEVEL_KEY + &quot;,&quot; + F_LINE_LEVEL_VALUE + &quot;,&quot;
+				+ F_CUSTOMER_NUMBER + &quot;,&quot; + F_STAFF_ID + &quot;,&quot; + F_STAFF_NAME + &quot;,&quot; + F_TEAM_ID + &quot;,&quot; + F_TEAM_NAME + &quot;,&quot;
+				+ F_CHANNEL_CODE + &quot;,&quot; + F_CHANNEL_NAME + &quot;,&quot; + F_ENABLED_FLAG;
+
+<span class="fc" id="L68">		String criteria = F_PARENT_CUST_NUM + &quot; = &quot; + &quot;'&quot; + xchg.getIn().getHeader(&quot;parentCustNum&quot;) + &quot;'&quot; + &quot; and &quot;</span>
+<span class="fc" id="L69">				+ F_PRODUCT_LINES + &quot; = &quot; + &quot;'&quot; + xchg.getIn().getHeader(&quot;productLines&quot;) + &quot;'&quot; + &quot; and &quot;</span>
+<span class="fc" id="L70">				+ F_ENABLED_FLAG + &quot; = &quot; + &quot;'&quot; + ENABLE_FLAG + &quot;'&quot;;</span>
+
+<span class="fc" id="L72">		String query = selectStatement(columns, T_RECOM_FB, criteria);</span>
+
+<span class="fc" id="L74">		System.out.println(&quot;query : &quot; + query);</span>
+
+<span class="fc" id="L76">		xchg.getIn().setBody(query);</span>
+
+<span class="fc" id="L78">	}</span>
+
+	@Override
+	public void insertRecomFeedback(Exchange xchg) {
+
+<span class="fc" id="L83">		RecomFeedbackPost recomFeedbackPost = xchg.getIn().getBody(RecomFeedbackPost.class);</span>
+<span class="fc" id="L84">		RecomFeedback recomFeedback = new RecomFeedback(recomFeedbackPost);</span>
+
+<span class="fc" id="L86">		String columns = F_FEEDBACK_ID + &quot;,&quot; + F_FEEDBACK_DTTM + &quot;,&quot; + F_FEEDBACK_SYSTEM + &quot;,&quot;</span>
+				+ F_RECOMMENDATION_SOURCE_SYSTEM + &quot;,&quot; + F_RECOMMENDED_OFFER + &quot;,&quot; + F_FEEDBACK_TYPE + &quot;,&quot;
+				+ F_FEEDBACK_REASON + &quot;,&quot; + F_PRODUCT_LINES + &quot;,&quot; + F_CLUB_ID + &quot;,&quot; + F_PARENT_CUST_NUM + &quot;,&quot;
+				+ F_LINE_LEVEL_KEY + &quot;,&quot; + F_LINE_LEVEL_VALUE + &quot;,&quot; + F_CUSTOMER_NUMBER + &quot;,&quot; + F_STAFF_ID + &quot;,&quot;
+				+ F_STAFF_NAME + &quot;,&quot; + F_TEAM_ID + &quot;,&quot; + F_TEAM_NAME + &quot;,&quot; + F_CHANNEL_CODE + &quot;,&quot; + F_CHANNEL_NAME;
+
+<span class="fc" id="L92">		String values = &quot;feedback_id_seq.nextval, CURRENT_TIMESTAMP,&quot; + &quot;'&quot; + recomFeedback.getFeedbackSystem() + &quot;','&quot;</span>
+<span class="fc" id="L93">				+ recomFeedback.getRecommendationSourceSystem() + &quot;','&quot; + recomFeedback.getRecommendedOffer() + &quot;','&quot;</span>
+<span class="fc" id="L94">				+ recomFeedback.getFeedbackType() + &quot;','&quot; + recomFeedback.getFeedbackReason() + &quot;','&quot;</span>
+<span class="fc" id="L95">				+ recomFeedback.getProductLines() + &quot;','&quot; + recomFeedback.getClubId() + &quot;','&quot;</span>
+<span class="fc" id="L96">				+ recomFeedback.getParentCustNum() + &quot;','&quot; + recomFeedback.getLineLevelKey() + &quot;','&quot;</span>
+<span class="fc" id="L97">				+ recomFeedback.getLineLevelValue() + &quot;','&quot; + recomFeedback.getCustomerNumber() + &quot;','&quot;</span>
+<span class="fc" id="L98">				+ recomFeedback.getStaffId() + &quot;','&quot; + recomFeedback.getStaffName() + &quot;','&quot; + recomFeedback.getTeamId()</span>
+<span class="fc" id="L99">				+ &quot;','&quot; + recomFeedback.getTeamName() + &quot;','&quot; + recomFeedback.getChannelCode() + &quot;','&quot;</span>
+<span class="fc" id="L100">				+ recomFeedback.getChannelName() + &quot;'&quot;;</span>
+
+<span class="fc" id="L102">		String query = insertStatement(columns, T_RECOM_FB, values);</span>
+
+<span class="fc" id="L104">		System.out.println(&quot;query : &quot; + query);</span>
+
+<span class="fc" id="L106">		xchg.getIn().setBody(query);</span>
+<span class="fc" id="L107">	}</span>
+
+	@Override
+	public void returnId(Exchange xchg) {
+<span class="nc" id="L111">		RecomFeedbackPost recomFeedbackPost = xchg.getIn().getBody(RecomFeedbackPost.class);</span>
+<span class="nc" id="L112">		RecomFeedback recomFeedback = new RecomFeedback(recomFeedbackPost);</span>
+
+<span class="nc" id="L114">		String criteria = F_CLUB_ID + &quot; = &quot; + &quot;'&quot; + recomFeedback.getClubId() + &quot;'&quot; + &quot; and &quot; + F_CUSTOMER_NUMBER + &quot; =&quot;</span>
+<span class="nc" id="L115">				+ &quot;'&quot; + recomFeedback.getCustomerNumber() + &quot;'&quot; + &quot; and &quot; + F_FEEDBACK_SYSTEM + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L116">				+ recomFeedback.getFeedbackSystem() + &quot;'&quot; + &quot; and &quot; + F_RECOMMENDATION_SOURCE_SYSTEM + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L117">				+ recomFeedback.getRecommendationSourceSystem() + &quot;'&quot; + &quot; and &quot; + F_RECOMMENDED_OFFER + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L118">				+ recomFeedback.getRecommendedOffer() + &quot;'&quot; + &quot; and &quot; + F_FEEDBACK_TYPE + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L119">				+ recomFeedback.getFeedbackType() + &quot;'&quot; + &quot; and &quot; + F_FEEDBACK_REASON + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L120">				+ recomFeedback.getFeedbackReason() + &quot;'&quot; + &quot; and &quot; + F_PRODUCT_LINES + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L121">				+ recomFeedback.getProductLines() + &quot;'&quot; + &quot; and &quot; + F_STAFF_ID + &quot; =&quot; + &quot;'&quot; + recomFeedback.getStaffId()</span>
+<span class="nc" id="L122">				+ &quot;'&quot; + &quot; and &quot; + F_STAFF_NAME + &quot; =&quot; + &quot;'&quot; + recomFeedback.getStaffName() + &quot;'&quot; + &quot; and &quot; + F_TEAM_ID</span>
+<span class="nc" id="L123">				+ &quot; =&quot; + &quot;'&quot; + recomFeedback.getTeamId() + &quot;'&quot; + &quot; and &quot; + F_TEAM_NAME + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L124">				+ recomFeedback.getTeamName() + &quot;'&quot; + &quot; and &quot; + F_CHANNEL_CODE + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L125">				+ recomFeedback.getChannelCode() + &quot;'&quot; + &quot; and &quot; + F_CHANNEL_NAME + &quot; =&quot; + &quot;'&quot;</span>
+<span class="nc" id="L126">				+ recomFeedback.getChannelName() + &quot;' ORDER BY &quot; + F_FEEDBACK_ID + &quot; DESC&quot;;</span>
+
+<span class="nc" id="L128">		String query = selectStatement(F_FEEDBACK_ID, T_RECOM_FB, criteria);</span>
+
+<span class="nc" id="L130">		String queryRow1 = selectStatement(F_FEEDBACK_ID, &quot;(&quot; + query + &quot;)&quot;, &quot;ROWNUM = 1&quot;);</span>
+
+<span class="nc" id="L132">		System.out.println(&quot;select query : &quot; + queryRow1);</span>
+<span class="nc" id="L133">		xchg.getIn().setBody(queryRow1);</span>
+<span class="nc" id="L134">	}</span>
+
+	@Override
+	public void printSuccessResponseMessage(Exchange xchg) {
+
+<span class="nc" id="L139">		ResponseMessage responseMessage = new ResponseMessage();</span>
+<span class="nc" id="L140">		Data data = new Data();</span>
+
+<span class="nc" id="L142">		String value = xchg.getIn().getHeader(&quot;feedbackHistory&quot;, String.class);</span>
+<span class="nc" id="L143">		String feedbackId = xchg.getIn().getHeader(&quot;feedbackId&quot;, String.class);</span>
+
+<span class="nc bnc" id="L145" title="All 2 branches missed.">		if (value != null) {</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">			switch (value) {</span>
+			case &quot;T&quot;:
+<span class="nc" id="L148">				List&lt;RecomFeedbackHistory&gt; recomFeedbacks = new ArrayList&lt;RecomFeedbackHistory&gt;();</span>
+<span class="nc" id="L149">				recomFeedbacks = getRecomFeedbackList(xchg);</span>
+<span class="nc" id="L150">				responseMessage.setStatus(200);</span>
+<span class="nc" id="L151">				responseMessage.setSuccess(true);</span>
+<span class="nc" id="L152">				responseMessage.setMessage(&quot;Insert record with feedback history&quot;);</span>
+<span class="nc" id="L153">				data.setFeedbackId(feedbackId);</span>
+<span class="nc" id="L154">				data.setHistory(recomFeedbacks);</span>
+<span class="nc" id="L155">				responseMessage.setData(data);</span>
+<span class="nc" id="L156">				break;</span>
+			default:
+<span class="nc" id="L158">				responseMessage.setStatus(200);</span>
+<span class="nc" id="L159">				responseMessage.setSuccess(true);</span>
+<span class="nc" id="L160">				responseMessage.setMessage(&quot;Insert record without feedback history&quot;);</span>
+<span class="nc" id="L161">				data.setFeedbackId(feedbackId);</span>
+<span class="nc" id="L162">				responseMessage.setData(data);</span>
+<span class="nc" id="L163">				xchg.getIn().setBody(&quot;INSERTED WITHOUT FEEDBACK HISTORY : &quot; + xchg.getIn().getBody());</span>
+				break;
+			}
+		}
+
+<span class="nc" id="L168">		xchg.getIn().setBody(responseMessage);</span>
+<span class="nc" id="L169">	}</span>
+
+	@Override
+	public void returnRecomFeedbackListByCust(Exchange xchg) {
+<span class="fc" id="L173">		String parentCustNum = String.valueOf(xchg.getIn().getHeader(&quot;parentCustNum&quot;).toString());</span>
+<span class="fc" id="L174">		String productLines = String.valueOf(xchg.getIn().getHeader(&quot;productLines&quot;).toString());</span>
+
+<span class="fc" id="L176">		String columns = &quot;TO_CHAR(&quot; + F_FEEDBACK_DTTM + &quot;, '&quot; + DATE_FORMAT + &quot;') &quot; + F_FEEDBACK_DTTM + &quot;, &quot;</span>
+				+ F_FEEDBACK_SYSTEM + &quot;, &quot; + F_RECOMMENDATION_SOURCE_SYSTEM + &quot;, &quot; + F_RECOMMENDED_OFFER + &quot;, &quot;
+				+ F_FEEDBACK_TYPE + &quot;, &quot; + F_FEEDBACK_REASON + &quot;, &quot; + F_PRODUCT_LINES + &quot;, &quot; + F_CLUB_ID + &quot;,&quot;
+				+ F_PARENT_CUST_NUM + &quot;, &quot; + F_LINE_LEVEL_KEY + &quot;, &quot; + F_LINE_LEVEL_VALUE + &quot;, &quot; + F_CUSTOMER_NUMBER
+				+ &quot;, &quot; + F_STAFF_ID + &quot;, &quot; + F_STAFF_NAME + &quot;, &quot; + F_TEAM_ID + &quot;, &quot; + F_TEAM_NAME + &quot;, &quot;
+				+ F_CHANNEL_CODE + &quot;, &quot; + F_CHANNEL_NAME + &quot;, &quot; + F_ENABLED_FLAG;
+
+<span class="fc" id="L183">		String criteria = F_PARENT_CUST_NUM + &quot; = &quot; + &quot;'&quot; + parentCustNum + &quot;'&quot; + &quot; and &quot; + F_PRODUCT_LINES + &quot; = &quot;</span>
+<span class="fc" id="L184">				+ &quot;'&quot; + productLines + &quot;'&quot; + &quot; and &quot; + F_ENABLED_FLAG + &quot; = &quot; + &quot;'&quot; + ENABLE_FLAG + &quot;'&quot; + &quot; ORDER BY &quot;</span>
+<span class="fc" id="L185">				+ F_FEEDBACK_ID + &quot; ASC&quot;;</span>
+
+<span class="fc" id="L187">		String query = selectStatement(columns, T_RECOM_FB, criteria);</span>
+
+<span class="fc" id="L189">		System.out.println(&quot;query : &quot; + query);</span>
+<span class="fc" id="L190">		xchg.getIn().setBody(query);</span>
+<span class="fc" id="L191">	}</span>
+
+	private List&lt;RecomFeedbackHistory&gt; getRecomFeedbackList(Exchange xchg) {
+		@SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L195">		ArrayList&lt;Map&lt;String, String&gt;&gt; dataList = (ArrayList&lt;Map&lt;String, String&gt;&gt;) xchg.getIn().getBody();</span>
+<span class="nc" id="L196">		List&lt;RecomFeedbackHistory&gt; recomFeedbacks = new ArrayList&lt;RecomFeedbackHistory&gt;();</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">		for (Map&lt;String, String&gt; data : dataList) {</span>
+
+<span class="nc" id="L199">			RecomFeedbackHistory recomFeedback = new RecomFeedbackHistory();</span>
+
+<span class="nc" id="L201">			recomFeedback.setFeedbackDttm(data.get(F_FEEDBACK_DTTM));</span>
+<span class="nc" id="L202">			recomFeedback.setFeedbackSystem(data.get(F_FEEDBACK_SYSTEM));</span>
+<span class="nc" id="L203">			recomFeedback.setRecommendationSourceSystem(data.get(F_RECOMMENDATION_SOURCE_SYSTEM));</span>
+<span class="nc" id="L204">			recomFeedback.setRecommendedOffer(data.get(F_RECOMMENDED_OFFER));</span>
+<span class="nc" id="L205">			recomFeedback.setFeedbackType(data.get(F_FEEDBACK_TYPE));</span>
+<span class="nc" id="L206">			recomFeedback.setFeedbackReason(data.get(F_FEEDBACK_REASON));</span>
+<span class="nc" id="L207">			recomFeedback.setProductLines(data.get(F_PRODUCT_LINES));</span>
+<span class="nc" id="L208">			recomFeedback.setClubId(data.get(F_CLUB_ID));</span>
+<span class="nc" id="L209">			recomFeedback.setParentCustNum(data.get(F_PARENT_CUST_NUM));</span>
+<span class="nc" id="L210">			recomFeedback.setLineLevelKey(data.get(F_LINE_LEVEL_KEY));</span>
+<span class="nc" id="L211">			recomFeedback.setLineLevelValue(data.get(F_LINE_LEVEL_VALUE));</span>
+<span class="nc" id="L212">			recomFeedback.setCustomerNumber(data.get(F_CUSTOMER_NUMBER));</span>
+<span class="nc" id="L213">			recomFeedback.setStaffId(data.get(F_STAFF_ID));</span>
+<span class="nc" id="L214">			recomFeedback.setStaffName(data.get(F_STAFF_NAME));</span>
+<span class="nc" id="L215">			recomFeedback.setTeamId(data.get(F_TEAM_ID));</span>
+<span class="nc" id="L216">			recomFeedback.setTeamName(data.get(F_TEAM_NAME));</span>
+<span class="nc" id="L217">			recomFeedback.setChannelCode(data.get(F_CHANNEL_CODE));</span>
+<span class="nc" id="L218">			recomFeedback.setChannelName(data.get(F_CHANNEL_NAME));</span>
+<span class="nc" id="L219">			recomFeedback.setEnabledFlag(data.get(F_ENABLED_FLAG));</span>
+
+<span class="nc" id="L221">			recomFeedbacks.add(recomFeedback);</span>
+		}
+
+<span class="nc" id="L224">		return recomFeedbacks;</span>
+	}
+
+	@Override
+	public boolean isRequestValid(Exchange xchg) {
+
+<span class="fc" id="L230">		RecomFeedbackPost recomFeedbackPost = xchg.getIn().getBody(RecomFeedbackPost.class);</span>
+<span class="fc" id="L231">		RecomFeedback recomFeedback = new RecomFeedback(recomFeedbackPost);</span>
+
+<span class="fc" id="L233">		return isMandatoryValid(recomFeedback);</span>
+	}
+
+	@Override
+	public void printErrorResponseMessage(Exchange xchg) {
+<span class="fc" id="L238">		ResponseMessage responseMessage = new ResponseMessage();</span>
+<span class="fc" id="L239">		RecomFeedbackPost recomFeedbackPost = xchg.getIn().getBody(RecomFeedbackPost.class);</span>
+<span class="fc" id="L240">		RecomFeedback recomFeedback = new RecomFeedback(recomFeedbackPost);</span>
+
+<span class="fc" id="L242">		responseMessage.setStatus(ErrorResponseUtil.STATUS_CODE_MANDATORY);</span>
+<span class="fc" id="L243">		responseMessage.setSuccess(false);</span>
+<span class="fc" id="L244">		responseMessage.setMessage(ErrorResponseUtil.responseCodes.get(ErrorResponseUtil.STATUS_CODE_MANDATORY)</span>
+<span class="fc" id="L245">				+ returnMessageForMandatoryValidation(recomFeedback));</span>
+<span class="fc" id="L246">		xchg.getOut().setBody(JsonUtils.convertToJson(responseMessage, &quot;Error&quot;));</span>
+<span class="fc" id="L247">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
