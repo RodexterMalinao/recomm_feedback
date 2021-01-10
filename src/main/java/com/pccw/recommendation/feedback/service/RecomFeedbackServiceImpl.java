@@ -58,16 +58,17 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 	@Override
 	public void selectRecomFeedback(Exchange xchg) {
 
-		String columns = F_FEEDBACK_ID + "," + " TO_CHAR(" + F_FEEDBACK_DTTM + ", '" + DATE_FORMAT + "') "
+		String columns ="DISTINCT "+ F_FEEDBACK_ID + "," + " TO_CHAR(" + F_FEEDBACK_DTTM + ", '" + DATE_FORMAT + "') "
 				+ F_FEEDBACK_DTTM + "," + F_FEEDBACK_SYSTEM + "," + F_RECOMMENDATION_SOURCE_SYSTEM + ","
 				+ F_RECOMMENDED_OFFER + "," + F_FEEDBACK_TYPE + "," + F_FEEDBACK_REASON + "," + F_PRODUCT_LINES + ","
 				+ F_CLUB_ID + "," + F_PARENT_CUST_NUM + "," + F_LINE_LEVEL_KEY + "," + F_LINE_LEVEL_VALUE + ","
 				+ F_CUSTOMER_NUMBER + "," + F_STAFF_ID + "," + F_STAFF_NAME + "," + F_TEAM_ID + "," + F_TEAM_NAME + ","
 				+ F_CHANNEL_CODE + "," + F_CHANNEL_NAME + "," + F_ENABLED_FLAG;
 
-		String criteria = F_PARENT_CUST_NUM + " = " + "'" + xchg.getIn().getHeader("parentCustNum") + "'" + " and "
-				+ F_PRODUCT_LINES + " = " + "'" + xchg.getIn().getHeader("productLines") + "'" + " and "
-				+ F_ENABLED_FLAG + " = " + "'" + ENABLE_FLAG + "'";
+		String criteria = F_PRODUCT_LINES + " = " + "'" + xchg.getIn().getHeader("productLines") + "'" + " and " + "( "
+				+ F_CLUB_ID + " = " + "'" + xchg.getIn().getHeader("clubId") + "'" + " or " + F_PARENT_CUST_NUM + " = "
+				+ "'" + xchg.getIn().getHeader("parentCustNum") + "'" + " )" + " and " + F_ENABLED_FLAG + " = " + "'"
+				+ ENABLE_FLAG + "'";
 
 		String query = selectStatement(columns, T_RECOM_FB, criteria);
 
@@ -230,7 +231,48 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 		RecomFeedbackPost recomFeedbackPost = xchg.getIn().getBody(RecomFeedbackPost.class);
 		RecomFeedback recomFeedback = new RecomFeedback(recomFeedbackPost);
 
-		return isMandatoryValid(recomFeedback);
+		/** Validate mandatory values */
+		boolean isMandatoryValid = isMandatoryValid(recomFeedback);
+		if (!isMandatoryValid) {
+			xchg.getIn().setHeader("error-code", ErrorResponseUtil.STATUS_CODE_MANDATORY);
+		}
+
+		/** club_id is not null if product_lines is "CLUB" */
+		boolean isClubIdValid = validateClubId(recomFeedback);
+		if (!isClubIdValid) {
+			xchg.getIn().setHeader("error-code", ErrorResponseUtil.STATUS_CODE_CLUB_ID);
+		}
+
+		/** Validate feedback_reason is not null if feedback_type is "REJECT" */
+		boolean isFeedbackReasonValid = validateFeedbackReason(recomFeedback);
+		if (!isFeedbackReasonValid) {
+			xchg.getIn().setHeader("error-code", ErrorResponseUtil.STATUS_CODE_FEEDBACK_REASON);
+		}
+
+		/** Validate line_level_key is not null if product_lines <> “CLUB” */
+		boolean isLineLevelKeyValid = validateLineLevelKey(recomFeedback);
+		if (!isLineLevelKeyValid) {
+			xchg.getIn().setHeader("error-code", ErrorResponseUtil.STATUS_CODE_LINE_LEVEL_KEY);
+		}
+
+		/** Validate line_level_value is not null if product_lines <> “CLUB” */
+		boolean isLineLevelValueValid = validateLineLevelValue(recomFeedback);
+		if (!isLineLevelValueValid) {
+			xchg.getIn().setHeader("error-code", ErrorResponseUtil.STATUS_CODE_LINE_LEVEL_VALUE);
+		}
+
+		/** Validate parent_cust_num is not null if product_lines <> “CLUB” */
+		boolean isParentCustNumValid = validateParentCustNum(recomFeedback);
+		if (!isParentCustNumValid) {
+			xchg.getIn().setHeader("error-code", ErrorResponseUtil.STATUS_CODE_PARENT_CUST_NUM);
+		}
+
+		if (isMandatoryValid && isFeedbackReasonValid && isLineLevelKeyValid && isLineLevelValueValid
+				&& isParentCustNumValid && isClubIdValid) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -239,10 +281,16 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 		RecomFeedbackPost recomFeedbackPost = xchg.getIn().getBody(RecomFeedbackPost.class);
 		RecomFeedback recomFeedback = new RecomFeedback(recomFeedbackPost);
 
-		responseMessage.setStatus(ErrorResponseUtil.STATUS_CODE_MANDATORY);
+		int errorCode = (int) xchg.getIn().getHeader("error-code");
+		responseMessage.setStatus(errorCode);
 		responseMessage.setSuccess(false);
-		responseMessage.setMessage(ErrorResponseUtil.responseCodes.get(ErrorResponseUtil.STATUS_CODE_MANDATORY)
-				+ returnMessageForMandatoryValidation(recomFeedback));
+
+		if (errorCode == ErrorResponseUtil.STATUS_CODE_MANDATORY) {
+			responseMessage.setMessage(ErrorResponseUtil.responseCodes.get(errorCode)
+					+ returnMessageForMandatoryValidation(recomFeedback));
+		} else {
+			responseMessage.setMessage(ErrorResponseUtil.responseCodes.get(errorCode));
+		}
 		xchg.getOut().setBody(JsonUtils.convertToJson(responseMessage, "Error"));
 	}
 

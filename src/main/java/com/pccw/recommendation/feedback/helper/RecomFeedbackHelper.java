@@ -78,16 +78,67 @@ public class RecomFeedbackHelper extends SQLHelper {
 		if (StringUtils.isEmpty(recomFeedback.getChannelName())) {
 			return false;
 		}
-		if (StringUtils.isEmpty(recomFeedback.getParentCustNum())) {
-			return false;
-		}
-		if (StringUtils.isEmpty(recomFeedback.getLineLevelKey())) {
-			return false;
-		}
-		if (StringUtils.isEmpty(recomFeedback.getLineLevelValue())) {
-			return false;
-		}
 		return true;
+	}
+
+	public boolean validateClubId(RecomFeedback recomFeedback) {
+		if (recomFeedback.getProductLines().equalsIgnoreCase("CLUB")) {
+			if (!StringUtils.isEmpty(recomFeedback.getClubId())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	public boolean validateFeedbackReason(RecomFeedback recomFeedback) {
+		if (recomFeedback.getFeedbackType().equalsIgnoreCase("REJECT")) {
+			if (!StringUtils.isEmpty(recomFeedback.getFeedbackReason())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	public boolean validateLineLevelKey(RecomFeedback recomFeedback) {
+		if (!recomFeedback.getProductLines().equalsIgnoreCase("CLUB")) {
+			if (!StringUtils.isEmpty(recomFeedback.getLineLevelKey())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	public boolean validateLineLevelValue(RecomFeedback recomFeedback) {
+		if (!recomFeedback.getProductLines().equalsIgnoreCase("CLUB")) {
+			if (!StringUtils.isEmpty(recomFeedback.getLineLevelValue())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	public boolean validateParentCustNum(RecomFeedback recomFeedback) {
+		if (!recomFeedback.getProductLines().equalsIgnoreCase("CLUB")) {
+			if (!StringUtils.isEmpty(recomFeedback.getParentCustNum())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
 	}
 
 	public static String returnMessageForMandatoryValidation(RecomFeedback recomFeedback) {
