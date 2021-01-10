@@ -9,7 +9,7 @@ public final class ErrorResponseUtilTest {
 	@Test
 	public void contextLoads() {
 
-		String value = ErrorResponseUtil.responseCodes.get(600);
+		String value = ErrorResponseUtil.responseCodes.get(ErrorResponseUtil.STATUS_CODE_MANDATORY);
 
 		assertEquals("The following fields are required : ", value);
 	}

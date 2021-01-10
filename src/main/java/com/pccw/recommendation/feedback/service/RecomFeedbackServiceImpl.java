@@ -27,14 +27,10 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 		ArrayList<Map<String, String>> dataList = (ArrayList<Map<String, String>>) xchg.getIn().getBody();
 		List<RecomFeedback> recomFeedbacks = new ArrayList<RecomFeedback>();
 
-		System.out.println(dataList);
 		for (Map<String, String> data : dataList) {
-
 			RecomFeedback recomFeedback = new RecomFeedback();
-			System.out.println("data.get(F_FEEDBACK_DTTM): " + String.valueOf(data.get(F_FEEDBACK_DTTM)));
-
 			recomFeedback.setFeedbackId(DataTypeUtil.stringAsInteger(data.get(F_FEEDBACK_ID)));
-			recomFeedback.setFeedbackDttm(DataTypeUtil.dateAsString(data.get(F_FEEDBACK_DTTM), DATE_FORMAT));
+			recomFeedback.setFeedbackDttm(String.valueOf(data.get(F_FEEDBACK_DTTM)));
 			recomFeedback.setFeedbackSystem(data.get(F_FEEDBACK_SYSTEM));
 			recomFeedback.setRecommendationSourceSystem(data.get(F_RECOMMENDATION_SOURCE_SYSTEM));
 			recomFeedback.setRecommendedOffer(data.get(F_RECOMMENDED_OFFER));
@@ -62,12 +58,12 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 	@Override
 	public void selectRecomFeedback(Exchange xchg) {
 
-		String columns = F_FEEDBACK_ID + "," + F_FEEDBACK_DTTM + "," + F_FEEDBACK_SYSTEM + ","
-				+ F_RECOMMENDATION_SOURCE_SYSTEM + "," + F_RECOMMENDED_OFFER + "," + F_FEEDBACK_TYPE + ","
-				+ F_FEEDBACK_REASON + "," + F_PRODUCT_LINES + "," + F_CLUB_ID + "," + F_PARENT_CUST_NUM + ","
-				+ F_LINE_LEVEL_KEY + "," + F_LINE_LEVEL_VALUE + "," + F_CUSTOMER_NUMBER + "," + F_STAFF_ID + ","
-				+ F_STAFF_NAME + "," + F_TEAM_ID + "," + F_TEAM_NAME + "," + F_CHANNEL_CODE + "," + F_CHANNEL_NAME + ","
-				+ F_ENABLED_FLAG;
+		String columns = F_FEEDBACK_ID + "," + " TO_CHAR(" + F_FEEDBACK_DTTM + ", '" + DATE_FORMAT + "') "
+				+ F_FEEDBACK_DTTM + "," + F_FEEDBACK_SYSTEM + "," + F_RECOMMENDATION_SOURCE_SYSTEM + ","
+				+ F_RECOMMENDED_OFFER + "," + F_FEEDBACK_TYPE + "," + F_FEEDBACK_REASON + "," + F_PRODUCT_LINES + ","
+				+ F_CLUB_ID + "," + F_PARENT_CUST_NUM + "," + F_LINE_LEVEL_KEY + "," + F_LINE_LEVEL_VALUE + ","
+				+ F_CUSTOMER_NUMBER + "," + F_STAFF_ID + "," + F_STAFF_NAME + "," + F_TEAM_ID + "," + F_TEAM_NAME + ","
+				+ F_CHANNEL_CODE + "," + F_CHANNEL_NAME + "," + F_ENABLED_FLAG;
 
 		String criteria = F_PARENT_CUST_NUM + " = " + "'" + xchg.getIn().getHeader("parentCustNum") + "'" + " and "
 				+ F_PRODUCT_LINES + " = " + "'" + xchg.getIn().getHeader("productLines") + "'" + " and "
@@ -75,7 +71,8 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 
 		String query = selectStatement(columns, T_RECOM_FB, criteria);
 
-		System.out.println("select query statement : " + query);
+		System.out.println("query : " + query);
+
 		xchg.getIn().setBody(query);
 
 	}
@@ -86,36 +83,33 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 		RecomFeedbackPost recomFeedbackPost = xchg.getIn().getBody(RecomFeedbackPost.class);
 		RecomFeedback recomFeedback = new RecomFeedback(recomFeedbackPost);
 
-		String columns = F_FEEDBACK_SYSTEM + "," + F_RECOMMENDATION_SOURCE_SYSTEM + "," + F_RECOMMENDED_OFFER + ","
-				+ F_FEEDBACK_TYPE + "," + F_FEEDBACK_REASON + "," + F_PRODUCT_LINES + "," + F_CLUB_ID + ","
-				+ F_PARENT_CUST_NUM + "," + F_LINE_LEVEL_KEY + "," + F_LINE_LEVEL_VALUE + "," + F_CUSTOMER_NUMBER + ","
-				+ F_STAFF_ID + "," + F_STAFF_NAME + "," + F_TEAM_ID + "," + F_TEAM_NAME + "," + F_CHANNEL_CODE + ","
-				+ F_CHANNEL_NAME;
+		String columns = F_FEEDBACK_ID + "," + F_FEEDBACK_DTTM + "," + F_FEEDBACK_SYSTEM + ","
+				+ F_RECOMMENDATION_SOURCE_SYSTEM + "," + F_RECOMMENDED_OFFER + "," + F_FEEDBACK_TYPE + ","
+				+ F_FEEDBACK_REASON + "," + F_PRODUCT_LINES + "," + F_CLUB_ID + "," + F_PARENT_CUST_NUM + ","
+				+ F_LINE_LEVEL_KEY + "," + F_LINE_LEVEL_VALUE + "," + F_CUSTOMER_NUMBER + "," + F_STAFF_ID + ","
+				+ F_STAFF_NAME + "," + F_TEAM_ID + "," + F_TEAM_NAME + "," + F_CHANNEL_CODE + "," + F_CHANNEL_NAME;
 
-		String values = "'" + recomFeedback.getFeedbackSystem() + "','" + recomFeedback.getRecommendationSourceSystem()
-				+ "','" + recomFeedback.getRecommendedOffer() + "','" + recomFeedback.getFeedbackType() + "','"
-				+ recomFeedback.getFeedbackReason() + "','" + recomFeedback.getProductLines() + "','"
-				+ recomFeedback.getClubId() + "','" + recomFeedback.getParentCustNum() + "','"
-				+ recomFeedback.getLineLevelKey() + "','" + recomFeedback.getLineLevelValue() + "','"
-				+ recomFeedback.getCustomerNumber() + "','" + recomFeedback.getStaffId() + "','"
-				+ recomFeedback.getStaffName() + "','" + recomFeedback.getTeamId() + "','" + recomFeedback.getTeamName()
-				+ "','" + recomFeedback.getChannelCode() + "','" + recomFeedback.getChannelName() + "'";
+		String values = "feedback_id_seq.nextval, CURRENT_TIMESTAMP," + "'" + recomFeedback.getFeedbackSystem() + "','"
+				+ recomFeedback.getRecommendationSourceSystem() + "','" + recomFeedback.getRecommendedOffer() + "','"
+				+ recomFeedback.getFeedbackType() + "','" + recomFeedback.getFeedbackReason() + "','"
+				+ recomFeedback.getProductLines() + "','" + recomFeedback.getClubId() + "','"
+				+ recomFeedback.getParentCustNum() + "','" + recomFeedback.getLineLevelKey() + "','"
+				+ recomFeedback.getLineLevelValue() + "','" + recomFeedback.getCustomerNumber() + "','"
+				+ recomFeedback.getStaffId() + "','" + recomFeedback.getStaffName() + "','" + recomFeedback.getTeamId()
+				+ "','" + recomFeedback.getTeamName() + "','" + recomFeedback.getChannelCode() + "','"
+				+ recomFeedback.getChannelName() + "'";
 
 		String query = insertStatement(columns, T_RECOM_FB, values);
 
-		System.out.println("query rodexter : " + query);
-		xchg.getIn().setBody(query);
-		System.out.println("getIn : " + xchg.getIn().getBody());
-//			xchg.getOut().setBody("SELECT 'message' AS '" + recomFeedback.getFeedbackDttm() + "'");
+		System.out.println("query : " + query);
 
+		xchg.getIn().setBody(query);
 	}
 
 	@Override
 	public void returnId(Exchange xchg) {
 		RecomFeedbackPost recomFeedbackPost = xchg.getIn().getBody(RecomFeedbackPost.class);
 		RecomFeedback recomFeedback = new RecomFeedback(recomFeedbackPost);
-
-		System.out.println("recomFeedbackRoy : " + xchg.getIn().getBody());
 
 		String criteria = F_CLUB_ID + " = " + "'" + recomFeedback.getClubId() + "'" + " and " + F_CUSTOMER_NUMBER + " ="
 				+ "'" + recomFeedback.getCustomerNumber() + "'" + " and " + F_FEEDBACK_SYSTEM + " =" + "'"
@@ -129,14 +123,14 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 				+ " =" + "'" + recomFeedback.getTeamId() + "'" + " and " + F_TEAM_NAME + " =" + "'"
 				+ recomFeedback.getTeamName() + "'" + " and " + F_CHANNEL_CODE + " =" + "'"
 				+ recomFeedback.getChannelCode() + "'" + " and " + F_CHANNEL_NAME + " =" + "'"
-				+ recomFeedback.getChannelName() + "' ORDER BY " + F_FEEDBACK_ID + " DESC LIMIT 1";
+				+ recomFeedback.getChannelName() + "' ORDER BY " + F_FEEDBACK_ID + " DESC";
 
 		String query = selectStatement(F_FEEDBACK_ID, T_RECOM_FB, criteria);
 
-		System.out.println("query updated roy : " + query);
+		String queryRow1 = selectStatement(F_FEEDBACK_ID, "(" + query + ")", "ROWNUM = 1");
 
-		xchg.getIn().setBody(query);
-		System.out.println("getIn : " + xchg.getIn().getBody());
+		System.out.println("select query : " + queryRow1);
+		xchg.getIn().setBody(queryRow1);
 	}
 
 	@Override
@@ -159,8 +153,6 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 				data.setFeedbackId(feedbackId);
 				data.setHistory(recomFeedbacks);
 				responseMessage.setData(data);
-				System.out.println("recomFeedbacks : " + recomFeedbacks);
-				xchg.getIn().setBody("INSERTED WITH FEEDBACK HISTORY : " + xchg.getIn().getBody());
 				break;
 			default:
 				responseMessage.setStatus(200);
@@ -180,13 +172,13 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 	public void returnRecomFeedbackListByCust(Exchange xchg) {
 		String parentCustNum = String.valueOf(xchg.getIn().getHeader("parentCustNum").toString());
 		String productLines = String.valueOf(xchg.getIn().getHeader("productLines").toString());
-		System.out.println("recomFeedback : " + xchg.getIn().getBody());
 
-		String columns = F_FEEDBACK_DTTM + ", " + F_FEEDBACK_SYSTEM + ", " + F_RECOMMENDATION_SOURCE_SYSTEM + ", "
-				+ F_RECOMMENDED_OFFER + ", " + F_FEEDBACK_TYPE + ", " + F_FEEDBACK_REASON + ", " + F_PRODUCT_LINES
-				+ ", " + F_CLUB_ID + "," + F_PARENT_CUST_NUM + ", " + F_LINE_LEVEL_KEY + ", " + F_LINE_LEVEL_VALUE
-				+ ", " + F_CUSTOMER_NUMBER + ", " + F_STAFF_ID + ", " + F_STAFF_NAME + ", " + F_TEAM_ID + ", "
-				+ F_TEAM_NAME + ", " + F_CHANNEL_CODE + ", " + F_CHANNEL_NAME + ", " + F_ENABLED_FLAG;
+		String columns = "TO_CHAR(" + F_FEEDBACK_DTTM + ", '" + DATE_FORMAT + "') " + F_FEEDBACK_DTTM + ", "
+				+ F_FEEDBACK_SYSTEM + ", " + F_RECOMMENDATION_SOURCE_SYSTEM + ", " + F_RECOMMENDED_OFFER + ", "
+				+ F_FEEDBACK_TYPE + ", " + F_FEEDBACK_REASON + ", " + F_PRODUCT_LINES + ", " + F_CLUB_ID + ","
+				+ F_PARENT_CUST_NUM + ", " + F_LINE_LEVEL_KEY + ", " + F_LINE_LEVEL_VALUE + ", " + F_CUSTOMER_NUMBER
+				+ ", " + F_STAFF_ID + ", " + F_STAFF_NAME + ", " + F_TEAM_ID + ", " + F_TEAM_NAME + ", "
+				+ F_CHANNEL_CODE + ", " + F_CHANNEL_NAME + ", " + F_ENABLED_FLAG;
 
 		String criteria = F_PARENT_CUST_NUM + " = " + "'" + parentCustNum + "'" + " and " + F_PRODUCT_LINES + " = "
 				+ "'" + productLines + "'" + " and " + F_ENABLED_FLAG + " = " + "'" + ENABLE_FLAG + "'" + " ORDER BY "
@@ -194,8 +186,8 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 
 		String query = selectStatement(columns, T_RECOM_FB, criteria);
 
+		System.out.println("query : " + query);
 		xchg.getIn().setBody(query);
-		System.out.println("queryRoy : " + query);
 	}
 
 	private List<RecomFeedbackHistory> getRecomFeedbackList(Exchange xchg) {
@@ -206,7 +198,7 @@ public class RecomFeedbackServiceImpl extends RecomFeedbackHelper implements Rec
 
 			RecomFeedbackHistory recomFeedback = new RecomFeedbackHistory();
 
-			recomFeedback.setFeedbackDttm(DataTypeUtil.dateAsString(data.get(F_FEEDBACK_DTTM), DATE_FORMAT));
+			recomFeedback.setFeedbackDttm(data.get(F_FEEDBACK_DTTM));
 			recomFeedback.setFeedbackSystem(data.get(F_FEEDBACK_SYSTEM));
 			recomFeedback.setRecommendationSourceSystem(data.get(F_RECOMMENDATION_SOURCE_SYSTEM));
 			recomFeedback.setRecommendedOffer(data.get(F_RECOMMENDED_OFFER));

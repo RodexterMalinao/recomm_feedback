@@ -10,33 +10,33 @@ import com.pccw.recommendation.feedback.model.RecomFeedback;
 
 public class RecomFeedbackHelper extends SQLHelper {
 
-	public static final String T_RECOM_FB = "recommendation_feedback";
+	public static final String T_RECOM_FB = "RECOMMENDATION_FEEDBACK";
 
-	public static final String F_STAFF_ID = "staff_id";
-	public static final String F_STAFF_NAME = "staff_name";
-	public static final String F_FEEDBACK_ID = "feedback_id";
-	public static final String F_FEEDBACK_DTTM = "feedback_dttm";
-	public static final String F_FEEDBACK_SYSTEM = "feedback_system";
-	public static final String F_PRODUCT_LINES = "product_lines";
-	public static final String F_RECOMMENDATION_SOURCE_SYSTEM = "recommendation_source_system";
-	public static final String F_RECOMMENDED_OFFER = "recommended_offer";
-	public static final String F_FEEDBACK_TYPE = "feedback_type";
-	public static final String F_FEEDBACK_REASON = "feedback_reason";
-	public static final String F_CLUB_ID = "club_id";
-	public static final String F_PARENT_CUST_NUM = "parent_cust_num";
-	public static final String F_LINE_LEVEL_KEY = "line_level_key";
-	public static final String F_LINE_LEVEL_VALUE = "line_level_value";
-	public static final String F_CUSTOMER_NUMBER = "customer_number";
-	public static final String F_TEAM_ID = "team_id";
-	public static final String F_TEAM_NAME = "team_name";
-	public static final String F_CHANNEL_CODE = "channel_code";
-	public static final String F_CHANNEL_NAME = "channel_name";
-	public static final String F_ENABLED_FLAG = "enabled_flag";
+	public static final String F_STAFF_ID = "STAFF_ID";
+	public static final String F_STAFF_NAME = "STAFF_NAME";
+	public static final String F_FEEDBACK_ID = "FEEDBACK_ID";
+	public static final String F_FEEDBACK_DTTM = "FEEDBACK_DTTM";
+	public static final String F_FEEDBACK_SYSTEM = "FEEDBACK_SYSTEM";
+	public static final String F_PRODUCT_LINES = "PRODUCT_LINES";
+	public static final String F_RECOMMENDATION_SOURCE_SYSTEM = "RECOMMENDATION_SOURCE_SYSTEM";
+	public static final String F_RECOMMENDED_OFFER = "RECOMMENDED_OFFER";
+	public static final String F_FEEDBACK_TYPE = "FEEDBACK_TYPE";
+	public static final String F_FEEDBACK_REASON = "FEEDBACK_REASON";
+	public static final String F_CLUB_ID = "CLUB_ID";
+	public static final String F_PARENT_CUST_NUM = "PARENT_CUST_NUM";
+	public static final String F_LINE_LEVEL_KEY = "LINE_LEVEL_KEY";
+	public static final String F_LINE_LEVEL_VALUE = "LINE_LEVEL_VALUE";
+	public static final String F_CUSTOMER_NUMBER = "CUSTOMER_NUMBER";
+	public static final String F_TEAM_ID = "TEAM_ID";
+	public static final String F_TEAM_NAME = "TEAM_NAME";
+	public static final String F_CHANNEL_CODE = "CHANNEL_CODE";
+	public static final String F_CHANNEL_NAME = "CHANNEL_NAME";
+	public static final String F_ENABLED_FLAG = "ENABLED_FLAG";
 
 	public static final String ENABLE_FLAG = "Y";
 	public static final String DISABLE_FLAG = "N";
 
-	public static final String DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+	public static final String DATE_FORMAT = "yyyy-MM-dd HH24:MI:SS";
 
 	public static final ImmutableList<String> mandatoryFields = ImmutableList.of(F_STAFF_ID, F_STAFF_NAME,
 			F_FEEDBACK_SYSTEM, F_PRODUCT_LINES, F_RECOMMENDATION_SOURCE_SYSTEM, F_RECOMMENDED_OFFER, F_FEEDBACK_TYPE,

@@ -146,7 +146,6 @@ public class RecomFeedbackServiceTest extends RecomFeedbackHelper {
 		RecomFeedbackPost post = postSample1(); // you didn't supply the object, so I guessed
 		String expected = "RecomFeedbackPost [feedbackSystem=Test, recommendationSourceSystem=, recommendedOffer=, feedbackType=, feedbackReason=, productLines=, clubId=, parentCustNum=, lineLevelKey=, lineLevelValue=, customerNumber=, staffId=, staffName=, teamId=, teamName=, channelCode=, channelName=]"; // put
 		// here
-		System.out.println("post.toString() : " + post.toString());
 		Assert.assertEquals(expected, post.toString());
 	}
 
